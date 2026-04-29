@@ -37,7 +37,7 @@ Time, Amount, V1–V28
 2. Train/test split with stratification
 3. Feature preprocessing
 4. Baseline model: Logistic Regression
-5. Model comparison: Logistic Regression vs Random Forest
+5. Model comparison: Logistic Regression, Random Forest, HistGradientBoosting
 6. Threshold selection
 7. Business cost analysis
 8. Final decision logic: approve / review / block
@@ -66,10 +66,13 @@ Fraud transactions:   0.1727%
 |---|---:|---:|---:|---:|---:|---:|
 | Logistic Regression | 0.50 | 0.972 | 0.716 | 0.061 | 0.918 | 0.114 |
 | Random Forest | 0.50 | 0.982 | 0.800 | 0.648 | 0.847 | 0.735 |
+| HistGradientBoosting | 0.50 | 0.961 | 0.716 | 0.290 | 0.878 | 0.435 |
 
 Logistic Regression показала высокий recall, но слишком низкий precision: модель находила большинство fraud-транзакций, но создавала много ложных срабатываний.
 
-Random Forest показал лучший баланс между precision и recall, поэтому был выбран как основная модель.
+HistGradientBoosting также показал высокий recall, но уступил Random Forest по precision, PR-AUC и F1-score.
+
+Random Forest показал лучший баланс между precision и recall, а также лучшие значения PR-AUC и F1-score среди протестированных моделей, поэтому был выбран как финальная модель.
 
 ## Threshold selection
 
@@ -83,6 +86,8 @@ threshold = 0.64
 precision = 0.830
 recall = 0.796
 F1 = 0.813
+false positives = 16
+false negatives = 20
 ```
 
 Также была добавлена простая бизнес-функция стоимости ошибок:
@@ -113,9 +118,9 @@ business cost = 1560
 ## Final decision logic
 
 ```text
-fraud_probability < 0.20        → approve
+fraud_probability < 0.20         → approve
 0.20 <= fraud_probability < 0.47 → review
-fraud_probability >= 0.47       → block
+fraud_probability >= 0.47        → block
 ```
 
 ## Results
@@ -142,8 +147,6 @@ bank-fraud-detection-system/
 │   └── 01_eda.ipynb
 │
 ├── models/
-│   ├── random_forest_fraud_model.joblib
-│   └── threshold_config.json
 │
 ├── reports/
 │   ├── figures/
