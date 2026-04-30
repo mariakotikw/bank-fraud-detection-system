@@ -125,7 +125,7 @@ fraud_probability >= 0.47        → block
 
 ## Results
 
-Финальная модель — **Random Forest with selected threshold**.
+Финальная модель — **Random Forest with selected threshold**
 
 Модель позволяет:
 
